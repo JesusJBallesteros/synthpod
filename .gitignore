@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.local
+.DS_Store
+Thumbs.db
+
+# Personal test transcripts and rendered audio stay out of the repository.
+*transcript*.txt
+/transcripts/
+*.mp3
+*.docx
+
+# Local tooling
+.claude/

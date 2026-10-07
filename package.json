@@ -1,0 +1,37 @@
+{
+  "name": "synthpod",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "In-browser multi-voice transcript to MP3 converter",
+  "license": "MIT",
+  "author": "Jesus J. Ballesteros",
+  "homepage": "https://jesusjballesteros.github.io/synthpod/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JesusJBallesteros/synthpod.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "preview:pages": "node scripts/serve-pages.mjs",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@breezystack/lamejs": "^1.2.7",
+    "@diffusionstudio/piper-wasm": "^1.0.0",
+    "@huggingface/transformers": "^3.8.1",
+    "browser-id3-writer": "^6.4.0",
+    "franc-min": "^6.2.0",
+    "kokoro-js": "^1.2.1",
+    "mammoth": "^1.13.0",
+    "onnxruntime-web": "^1.30.0"
+  },
+  "devDependencies": {
+    "music-metadata": "^12.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
+  }
+}

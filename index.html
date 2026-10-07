@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SynthPod — transcript to audio</title>
+    <meta name="theme-color" content="#3b82f6" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="icon-192.png" />
+    <script>
+      // Apply a saved light/dark choice before the first paint, so the page does not flash.
+      try {
+        var theme = JSON.parse(localStorage.getItem('synthpod.theme'));
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch (e) {}
+    </script>
+    <link rel="stylesheet" href="/src/ui/style.css" />
+  </head>
+  <body>
+    <!-- All visible text comes from src/ui/locales/*.ts via the data-i18n attributes. -->
+    <header class="topbar">
+      <div class="brand">
+        <img src="icon-192.png" alt="" width="36" height="36" />
+        <div>
+          <h1>SynthPod</h1>
+          <p class="tagline" data-i18n="app.tagline"></p>
+        </div>
+      </div>
+      <div class="prefs">
+        <label><span data-i18n="ui.theme"></span>
+          <select id="theme">
+            <option value="system" data-i18n="ui.theme.system"></option>
+            <option value="light" data-i18n="ui.theme.light"></option>
+            <option value="dark" data-i18n="ui.theme.dark"></option>
+          </select>
+        </label>
+        <label><span data-i18n="ui.language"></span>
+          <select id="uiLanguage"></select>
+        </label>
+      </div>
+    </header>
+
+    <!-- Shown on narrow screens only, where the two columns become two stages. -->
+    <nav class="stages">
+      <button id="stageText" data-i18n="stage.text"></button>
+      <button id="stageAudio" data-i18n="stage.audio"></button>
+    </nav>
+
+    <main class="layout">
+      <div class="column" data-stage="text">
+        <section class="step" id="dropZone">
+          <h2><span class="num">1</span><span data-i18n="step.transcript"></span></h2>
+          <textarea id="input" rows="14" spellcheck="false" data-i18n-attr="placeholder:input.placeholder"></textarea>
+          <div class="row">
+            <button id="openFile" data-i18n="file.open"></button>
+            <button id="saveTranscript" data-i18n="file.save" disabled></button>
+            <input id="fileInput" type="file" accept=".txt,.md,.docx,.srt,.vtt,text/plain" hidden />
+            <span id="fileStatus" class="muted"></span>
+          </div>
+        </section>
+
+        <section class="step">
+          <h2><span class="num">2</span><span data-i18n="step.check"></span></h2>
+          <div id="review"></div>
+          <details>
+            <summary data-i18n="options.summary"></summary>
+            <div class="row">
+              <label><span data-i18n="format.label"></span>
+                <select id="format">
+                  <option value="auto" data-i18n="format.auto"></option>
+                  <option value="inline" data-i18n="format.inline"></option>
+                  <option value="ownline" data-i18n="format.ownline"></option>
+                </select>
+              </label>
+              <label><span data-i18n="expected.label"></span>
+                <input id="expected" type="number" min="0" max="20" value="0" data-i18n-attr="title:expected.title" />
+              </label>
+            </div>
+            <div class="row">
+              <label><input id="stripTimecodes" type="checkbox" checked /> <span data-i18n="strip.timecodes"></span></label>
+              <label><input id="stripDirections" type="checkbox" checked /> <span data-i18n="strip.directions"></span></label>
+            </div>
+          </details>
+        </section>
+
+        <section class="step">
+          <h2><span class="num">3</span><span data-i18n="step.found"></span></h2>
+          <div id="analysis" class="muted"></div>
+        </section>
+
+        <button id="toAudio" class="primary stage-next" data-i18n="stage.next"></button>
+      </div>
+
+      <div class="column" data-stage="audio">
+        <details class="step optional" id="translatePanel">
+          <summary><span class="num">⇄</span><span data-i18n="translate.title"></span></summary>
+          <p class="muted" data-i18n="translate.note"></p>
+          <div class="row">
+            <label><span data-i18n="translate.from"></span> <strong id="translateFrom"></strong></label>
+            <label><span data-i18n="translate.to"></span>
+              <select id="translateTo"></select>
+            </label>
+            <button id="translateStart" class="primary" data-i18n="translate.start"></button>
+            <button id="translateCancel" hidden data-i18n="translate.cancel"></button>
+          </div>
+          <progress id="translateProgress" value="0" max="1" hidden></progress>
+          <p id="translateStatus" class="muted" role="status"></p>
+          <div class="row">
+            <button id="translateReview" hidden data-i18n="translate.review"></button>
+            <button id="translateRestore" hidden data-i18n="translate.restore"></button>
+          </div>
+        </details>
+
+        <section class="step">
+          <h2><span class="num">4</span><span data-i18n="step.language"></span></h2>
+          <div class="row">
+            <label><span data-i18n="language.label"></span>
+              <select id="language" disabled></select>
+            </label>
+            <label><span data-i18n="engine.label"></span>
+              <select id="engine" disabled></select>
+            </label>
+          </div>
+          <p id="voiceStatus" class="muted"></p>
+          <p class="muted" data-i18n="engine.note"></p>
+          <details>
+            <summary data-i18n="hw.summary"></summary>
+            <p id="device" class="muted"></p>
+            <h3 data-i18n="hw.need"></h3>
+            <ul>
+              <li data-i18n-html="hw.browser"></li>
+              <li data-i18n-html="hw.memory"></li>
+              <li data-i18n-html="hw.disk"></li>
+              <li data-i18n-html="hw.internet"></li>
+            </ul>
+            <h3 data-i18n="hw.cpugpu"></h3>
+            <ul>
+              <li data-i18n-html="hw.piper"></li>
+              <li data-i18n-html="hw.kokoro"></li>
+            </ul>
+            <h3 data-i18n="hw.times"></h3>
+            <div class="scroll-x">
+              <table class="times">
+                <thead>
+                  <tr><th data-i18n="hw.col.computer"></th><th>Piper</th><th>Kokoro</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td data-i18n-html="hw.row1"></td><td data-i18n="hw.row1.piper"></td><td data-i18n="hw.row1.kokoro"></td></tr>
+                  <tr><td data-i18n-html="hw.row2"></td><td data-i18n="hw.row2.piper"></td><td data-i18n="hw.row2.kokoro"></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="muted" data-i18n="hw.note"></p>
+          </details>
+        </section>
+
+        <section class="step">
+          <h2><span class="num">5</span><span data-i18n="step.voices"></span></h2>
+          <div id="speakers" class="muted"></div>
+        </section>
+
+        <section class="step">
+          <h2><span class="num">6</span><span data-i18n="step.settings"></span></h2>
+          <p class="muted" data-i18n="settings.note"></p>
+          <details>
+            <summary data-i18n="style.summary"></summary>
+            <div class="row">
+              <label><span data-i18n="mode.label"></span>
+                <select data-setting="mode">
+                  <option value="distinct" data-i18n="mode.distinct"></option>
+                  <option value="hybrid" data-i18n="mode.hybrid"></option>
+                  <option value="narrator" data-i18n="mode.narrator"></option>
+                </select>
+              </label>
+              <label><span data-i18n="announce.label"></span>
+                <select data-setting="announceStyle">
+                  <option value="says" data-i18n="announce.says"></option>
+                  <option value="name" data-i18n="announce.name"></option>
+                </select>
+              </label>
+            </div>
+            <div class="row">
+              <label><span data-i18n="pause.turns"></span> <input type="number" min="0" max="5000" step="50" data-setting="turnPauseMs" /> <span data-i18n="unit.ms"></span></label>
+              <label><span data-i18n="pause.paragraphs"></span> <input type="number" min="0" max="5000" step="50" data-setting="paragraphPauseMs" /> <span data-i18n="unit.ms"></span></label>
+              <label><span data-i18n="pause.coldOpen"></span> <input type="number" min="0" max="10000" step="100" data-setting="coldOpenPauseMs" data-i18n-attr="title:pause.coldOpen.title" /> <span data-i18n="unit.ms"></span></label>
+            </div>
+          </details>
+          <details>
+            <summary data-i18n="pron.summary"></summary>
+            <div class="row">
+              <label><input type="checkbox" data-setting="expand" /> <span data-i18n="pron.expand"></span></label>
+            </div>
+            <p class="muted" data-i18n="dict.note"></p>
+            <div id="dictionary"></div>
+          </details>
+          <details>
+            <summary data-i18n="sound.summary"></summary>
+            <div class="row">
+              <label><input type="checkbox" data-setting="loudness" /> <span data-i18n="loudness.label"></span></label>
+              <label><input type="number" min="-30" max="-9" step="1" data-setting="loudnessTarget" /> LUFS <span class="muted" data-i18n="loudness.note"></span></label>
+            </div>
+            <div class="row">
+              <label><span data-i18n="quality.label"></span>
+                <select data-setting="kbps">
+                  <option value="64" data-i18n="kbps.64"></option>
+                  <option value="96" data-i18n="kbps.96"></option>
+                  <option value="128" data-i18n="kbps.128"></option>
+                  <option value="192" data-i18n="kbps.192"></option>
+                </select>
+              </label>
+              <label><span data-i18n="channels.label"></span>
+                <select data-setting="stereo">
+                  <option value="false" data-i18n="channels.mono"></option>
+                  <option value="true" data-i18n="channels.stereo"></option>
+                </select>
+              </label>
+              <label><span data-i18n="rate.label"></span>
+                <select data-setting="sampleRate">
+                  <option value="0" data-i18n="rate.auto"></option>
+                  <option value="22050">22.05 kHz</option>
+                  <option value="24000">24 kHz</option>
+                  <option value="44100">44.1 kHz</option>
+                </select>
+              </label>
+            </div>
+            <p class="muted" data-i18n="bitrate.note"></p>
+            <div class="row">
+              <label><input type="checkbox" data-setting="chapters" /> <span data-i18n="chapters.label"></span></label>
+            </div>
+          </details>
+          <details>
+            <summary data-i18n="tags.summary"></summary>
+            <div class="row">
+              <label><span data-i18n="tags.title"></span> <input id="tagTitle" type="text" data-i18n-attr="placeholder:tags.title.placeholder" /></label>
+              <label><span data-i18n="tags.artist"></span> <input type="text" data-setting="artist" data-i18n-attr="placeholder:tags.artist.placeholder" /></label>
+            </div>
+            <div class="row">
+              <label><span data-i18n="tags.comment"></span> <input type="text" data-setting="comment" /></label>
+            </div>
+          </details>
+          <details>
+            <summary data-i18n="presets.summary"></summary>
+            <p class="muted" data-i18n="presets.note"></p>
+            <div class="row">
+              <select id="presetList" data-i18n-attr="aria-label:presets.list"></select>
+              <button id="presetLoad" data-i18n="presets.load"></button>
+              <button id="presetDelete" class="quiet" data-i18n="presets.delete"></button>
+            </div>
+            <div class="row">
+              <input id="presetName" type="text" data-i18n-attr="placeholder:presets.name" />
+              <button id="presetSave" data-i18n="presets.save"></button>
+              <button id="presetReset" class="quiet" data-i18n="presets.reset"></button>
+            </div>
+          </details>
+        </section>
+
+        <section class="step final">
+          <h2><span class="num">7</span><span data-i18n="step.render"></span></h2>
+          <div class="row">
+            <button id="render" class="primary" disabled data-i18n="render.start"></button>
+            <button id="cancel" hidden data-i18n="render.cancel"></button>
+            <button id="save" class="primary" hidden data-i18n="render.save"></button>
+            <button id="saveSrt" hidden data-i18n="captions.srt"></button>
+            <button id="saveVtt" hidden data-i18n="captions.vtt"></button>
+            <button id="clearCache" class="quiet" data-i18n="cache.clear" data-i18n-attr="title:cache.clear.title"></button>
+          </div>
+          <progress id="progress" value="0" max="1" hidden></progress>
+          <p id="status" class="muted" role="status"></p>
+          <audio id="player" controls hidden></audio>
+        </section>
+      </div>
+    </main>
+
+    <dialog id="translateDialog">
+      <div class="dialog-head">
+        <h2 data-i18n="translate.dialogTitle"></h2>
+        <p class="muted" id="translateDialogNote"></p>
+      </div>
+      <div id="compare" class="compare"></div>
+      <div class="row dialog-foot">
+        <button id="translateUse" class="primary" data-i18n="translate.use"></button>
+        <button id="translateClose" data-i18n="translate.close"></button>
+      </div>
+    </dialog>
+
+    <footer class="muted">
+      <span id="offlineStatus"></span>
+    </footer>
+    <script type="module" src="/src/ui/main.ts"></script>
+  </body>
+</html>
