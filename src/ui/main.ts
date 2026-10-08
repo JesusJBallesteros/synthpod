@@ -106,6 +106,8 @@ let previewCtx: AudioContext | null = null;
 let previewSource: AudioBufferSourceNode | null = null;
 
 function displayName(name: string): string {
+  // With no speakers at all, the single voice simply reads the text.
+  if (name === UNASSIGNED && stats.length === 0) return t('speaker.reader');
   return name === UNASSIGNED ? t('speaker.unassigned') : name === NARRATOR ? t('speaker.narrator') : name;
 }
 
@@ -406,6 +408,7 @@ async function refresh(): Promise<void> {
       analysisEl,
       {
         stats,
+        totalWords: turns.reduce((n, turn) => n + wordCount(turn.text), 0),
         turnCount: turns.length,
         formatLabel: t(`found.${detected.format}`),
         estimatedSeconds: estimateSeconds(turns, (speaker) => toCast(speaker).speed),
@@ -615,6 +618,9 @@ async function loadFile(file: File): Promise<void> {
   try {
     const loaded = await readTranscriptFile(file);
     input.value = loaded.text;
+    // A PDF is running text for one voice; anything else goes back to detecting speakers.
+    if (loaded.prose) format.value = 'none';
+    else if (format.value === 'none') format.value = 'auto';
     title = loaded.title;
     tagTitle.value = loaded.title;
     // A new document: detect its language afresh.
@@ -736,7 +742,7 @@ async function runTranslation(): Promise<void> {
       translating.signal,
     );
     const texts = rebuildTurns(source.length, units, results);
-    const rows = source.map((turn, i) => ({ speaker: turn.speaker, original: turn.text, translated: texts[i] }));
+    const rows = source.map((turn, i) => ({ speaker: turn.speaker, section: turn.title !== undefined, original: turn.text, translated: texts[i] }));
     pendingTranslation = { rows, read: () => rows.map((r) => r.translated) };
     translateStatus.textContent = t('translate.done');
     openTranslationReview();
@@ -883,7 +889,11 @@ translateReview.addEventListener('click', openTranslationReview);
 $('translateClose').addEventListener('click', () => translateDialog.close());
 translateUse.addEventListener('click', () => {
   if (!pendingTranslation) return;
-  const text = toTranscript(pendingTranslation.rows.map((r) => r.speaker), pendingTranslation.read());
+  const text = toTranscript(
+    pendingTranslation.rows.map((r) => r.speaker),
+    pendingTranslation.read(),
+    pendingTranslation.rows.map((r) => r.section === true),
+  );
   original ??= input.value;
   translateDialog.close();
   replaceTranscript(text);

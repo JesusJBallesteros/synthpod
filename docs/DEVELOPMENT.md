@@ -12,6 +12,8 @@ Then: a tool to step through numbers and other items that may be read oddly, cha
 
 Most recently: on narrow screens the two columns become two stages (Text, Audio) with a switch under the title, and a finished translation is reviewed turn by turn, side by side with the original, in a dialog.
 
+Latest: PDF documents without speakers (papers, reports) are read as running text for one voice. This is a first approach; see "Things worth knowing".
+
 Optional cloud speech engines were considered and dropped: the local engines are enough.
 
 Considered and left out, on purpose or for lack of data:
@@ -90,6 +92,8 @@ The narrow-screen stage is a `data-stage` attribute on `<body>`; below 1100 px t
 - **Loudness** is measured per voice (ITU-R BS.1770) so speakers are balanced, then a peak limiter keeps the result under −1 dBFS. Integrated loudness of the whole file lands slightly under the target because of the pauses.
 - **MP3 at 24 kHz and below is MPEG-2**, which allows at most 160 kbps; `effectiveBitrate` picks the nearest valid rate.
 - **Runtime downloads:** Piper voices come from `rhasspy/piper-voices` on Hugging Face (cached in OPFS) and Kokoro from `onnx-community/Kokoro-82M-v1.0-ONNX` (Cache Storage). Piper's onnxruntime WASM and the phonemizer are bundled with the app; Kokoro's runtime comes from jsDelivr and is cached by the service worker.
+- **PDF extraction** (`src/parse/pdf.ts`, with pdf.js doing the reading in `pdf-read.ts`) works on positioned text runs. The body font size is the most common one by character count; everything is judged against it. Dropped: lines in the top or bottom margin that repeat on at least half the pages (headers, footers), lone page numbers, the block of smaller text at the foot of a page (footnotes), small raised digits (footnote markers), and smaller text above the first body line of page one. Lines are ordered by position, left column first when a page clearly has two. Paragraphs break at first-line indents, extra vertical space, a change of font size, or a short last line. Known gaps: tables, figure captions, reference lists and block quotes in smaller type at the foot of a page are not recognised. `scripts/pdf-dump.mjs` prints how pdf.js sees a file, for tuning these rules.
+- **Sections in text without speakers.** `pdf.ts` writes each section heading as a markdown `## Heading` line: the titles of the PDF outline when at least two of them match a paragraph, otherwise single short lines in capitals, in larger type or starting with a section number. Sub-headings that differ only by being italic or bold are not recognised, because pdf.js does not report that reliably. When the parser finds no speakers (or is told there are none), every `#` heading starts a new turn with a `title`; the renderer carries the title on its cues and `toChapters` uses it as the chapter name. With speakers present, `#` is ordinary markup and is ignored. Translation puts the `## ` back in front of each section.
 - **Chapters** are ID3v2 `CHAP`/`CTOC` frames. The tag library cannot write them, so `captions.ts` builds them and inserts them into the tag it produced. A table of contents holds at most 255 entries, so longer transcripts get one chapter per several turns.
 - **Captions and chapters use real timings**: `assemble()` reports where each sentence landed in the output.
 - **Translation models** are `Xenova/opus-mt-*` on Hugging Face, about 110 MB per pair (quantised). The list of pairs in `src/translate/pairs.ts` was checked against the repositories that exist; pairs without a direct model go through English. Multi-target models such as `en-ROMANCE` (needed for Portuguese and Catalan) are not used.
@@ -107,6 +111,7 @@ The narrow-screen stage is a `data-stage` attribute on `<body>`; below 1100 px t
 | [@breezystack/lamejs](https://github.com/shijinyu/lamejs) (MP3 encoder) | LGPL-3.0 |
 | [browser-id3-writer](https://github.com/egoroof/browser-id3-writer) (ID3 tags) | MIT |
 | [mammoth](https://github.com/mwilliamson/mammoth.js) (`.docx` reading) | BSD-2-Clause |
+| [pdf.js](https://github.com/mozilla/pdf.js) (`.pdf` reading) | Apache-2.0 |
 | [franc-min](https://github.com/wooorm/franc) (language detection) | MIT |
 
 **Keeping the app MIT.** The phonemizer contains espeak-ng, which is GPL-3.0. It is not compiled or linked into the app: it ships as its own unmodified WebAssembly file and data file, which the app starts as a separate program and exchanges text with. Keep it that way; do not copy its source into `src/`. The MP3 encoder (LGPL-3.0) is likewise used as an unmodified, replaceable library.

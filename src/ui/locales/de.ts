@@ -9,7 +9,7 @@ export const de: Record<MessageKey, string> = {
   'ui.language': 'Sprache der Oberfläche',
 
   'step.transcript': 'Transkript',
-  'input.placeholder': 'Füge hier ein Transkript ein oder ziehe eine Datei hierher (.txt, .md, .docx, .srt, .vtt).\n\nAnna: Willkommen zurück zur Sendung.\nBen: Danke für die Einladung.',
+  'input.placeholder': 'Füge hier ein Transkript ein oder ziehe eine Datei hierher (.txt, .md, .docx, .srt, .vtt, .pdf).\n\nAnna: Willkommen zurück zur Sendung.\nBen: Danke für die Einladung.',
   'file.open': 'Datei öffnen…',
   'file.reading': '{name} wird gelesen…',
   'file.loaded': '{name} geladen ({words} Wörter).',
@@ -40,7 +40,7 @@ export const de: Record<MessageKey, string> = {
   'found.ownline': 'Angaben in eigener Zeile',
   'found.bracket': 'Angaben wie „[Name] Text“',
   'found.dash': 'Angaben wie „Name — Text“',
-  'found.none': 'keine Sprecherangaben gefunden',
+  'found.none': 'keine Sprecher: von einer Stimme gelesen',
   'table.speaker': 'Sprecher (zum Umbenennen bearbeiten)',
   'table.turns': 'Beiträge',
   'table.words': 'Wörter',
@@ -207,7 +207,7 @@ export const de: Record<MessageKey, string> = {
   'review.position': "{i} von {n}",
   'review.readAs': "Mit den aktuellen Einstellungen wird das so gelesen: „{text}“",
   'review.addWord': "In die Wortliste aufnehmen",
-  'chapters.label': "Kapitelmarken in die MP3 schreiben, eine pro Redebeitrag (Podcast-Player zeigen sie an)",
+  'chapters.label': "Kapitelmarken in die MP3 schreiben, eine pro Redebeitrag oder Abschnitt (Podcast-Player zeigen sie an)",
   'captions.srt': "Untertitel speichern (.srt)",
   'captions.vtt': "Untertitel speichern (.vtt)",
   'translate.title': "Übersetzen (optional)",
@@ -247,6 +247,9 @@ export const de: Record<MessageKey, string> = {
   'device.threads.failed': "Multithreading ließ sich in diesem Browser nicht starten, deshalb wird ein Prozessor-Thread genutzt (um ein Mehrfaches langsamer)",
   'engine.singleThread': "Multithreading ließ sich in diesem Browser nicht starten, deshalb arbeitet die App mit einem Prozessor-Thread weiter. Das Erzeugen funktioniert, dauert aber um ein Mehrfaches länger.",
   'render.startingEngine': "Sprach-Engine {engine} wird gestartet…",
+
+  'format.none': "Keine Sprecher: eine Stimme liest alles",
+  'speaker.reader': "Vorleser",
 
   'offline.ready': 'Bereit für die Nutzung ohne Internet. Bereits verwendete Stimmen stehen offline zur Verfügung.',
   'offline.saving': 'Die App wird für die Offline-Nutzung gespeichert…',

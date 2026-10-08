@@ -60,6 +60,7 @@ export interface Chunk {
   /** Index of the turn this sentence belongs to, and who speaks it (null = unassigned). */
   turn: number;
   speaker: string | null;
+  title?: string;
 }
 
 const MAX_CHUNK_CHARS = 300;
@@ -102,7 +103,7 @@ export function planChunks(turns: Turn[], opts: PlanOptions): Chunk[] {
     const start = chunks.length;
     // The narrator names the speaker whenever it changes; in hybrid mode each speaker is named once.
     const announceNow = turn.speaker !== null && (opts.mode === 'narrator' ? turn.speaker !== previous : opts.mode === 'hybrid' && !introduced.has(turn.speaker));
-    const where = { turn: index, speaker: turn.speaker };
+    const where = { turn: index, speaker: turn.speaker, title: turn.title };
     if (announceNow) chunks.push({ text: opts.announce(turn.speaker!, cast), cast, pauseAfterMs: ANNOUNCE_PAUSE_MS, ...where });
     if (turn.speaker) introduced.add(turn.speaker);
     previous = turn.speaker;
@@ -215,6 +216,7 @@ export async function renderTurns(turns: Turn[], opts: RenderOptions): Promise<R
     turn: spoken[i].turn,
     speaker: spoken[i].speaker,
     text: spoken[i].text,
+    title: spoken[i].title,
   }));
   return { pcm, sampleRate, skipped, cues };
 }

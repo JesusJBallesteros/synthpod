@@ -10,6 +10,8 @@ export interface UnlabelledSegment {
 
 export interface AnalysisModel {
   stats: SpeakerStat[];
+  /** Words in the whole text, including parts with no speaker. */
+  totalWords: number;
   turnCount: number;
   formatLabel: string;
   estimatedSeconds: number;
@@ -46,11 +48,9 @@ export function formatDuration(seconds: number): string {
 
 export function renderAnalysis(root: HTMLElement, model: AnalysisModel, actions: AnalysisActions): void {
   root.className = '';
-  const words = model.stats.reduce((n, s) => n + s.words, 0);
   const parts = [
-    plural('analysis.speakers', model.stats.length),
-    plural('analysis.turns', model.turnCount),
-    t('analysis.words', { n: formatNumber(words) }),
+    ...(model.stats.length ? [plural('analysis.speakers', model.stats.length), plural('analysis.turns', model.turnCount)] : []),
+    t('analysis.words', { n: formatNumber(model.totalWords) }),
     t('analysis.audio', { duration: formatDuration(model.estimatedSeconds) }),
     model.formatLabel,
   ];

@@ -1,6 +1,8 @@
 /** One turn of the transcript next to its translation. */
 export interface CompareRow {
   speaker: string | null;
+  /** True when this turn opens a section, so its first line is a heading. */
+  section?: boolean;
   original: string;
   translated: string;
 }

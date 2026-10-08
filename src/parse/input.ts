@@ -71,11 +71,13 @@ export class UnsupportedFileError extends Error {
 
 export interface LoadedTranscript {
   text: string;
+  /** True for running text with no speakers (a paper, a report), to be read by one voice. */
+  prose?: boolean;
   /** File name without its extension, used as the default MP3 name. */
   title: string;
 }
 
-export const ACCEPTED_EXTENSIONS = ['.txt', '.md', '.docx', '.srt', '.vtt'];
+export const ACCEPTED_EXTENSIONS = ['.txt', '.md', '.docx', '.srt', '.vtt', '.pdf'];
 
 export async function readTranscriptFile(file: File): Promise<LoadedTranscript> {
   const dot = file.name.lastIndexOf('.');
@@ -86,6 +88,12 @@ export async function readTranscriptFile(file: File): Promise<LoadedTranscript> 
     const mammoth = await import('mammoth/mammoth.browser.min.js');
     const result = await (mammoth.default ?? mammoth).extractRawText({ arrayBuffer: await file.arrayBuffer() });
     return { text: result.value.trim(), title };
+  }
+  if (ext === '.pdf' || file.type === 'application/pdf') {
+    // pdf.js is large, so it is only loaded when a PDF is opened.
+    const [{ readPdf }, { pdfToText }] = await Promise.all([import('./pdf-read'), import('./pdf')]);
+    const { pages, outline } = await readPdf(await file.arrayBuffer());
+    return { text: pdfToText(pages, outline), title, prose: true };
   }
   if (ext === '.srt' || ext === '.vtt') return { text: subtitlesToText(await file.text()), title };
   if (ext === '.txt' || ext === '.md' || file.type.startsWith('text/')) return { text: await file.text(), title };

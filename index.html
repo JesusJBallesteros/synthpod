@@ -54,7 +54,7 @@
           <div class="row">
             <button id="openFile" data-i18n="file.open"></button>
             <button id="saveTranscript" data-i18n="file.save" disabled></button>
-            <input id="fileInput" type="file" accept=".txt,.md,.docx,.srt,.vtt,text/plain" hidden />
+            <input id="fileInput" type="file" accept=".txt,.md,.docx,.srt,.vtt,.pdf,text/plain,application/pdf" hidden />
             <span id="fileStatus" class="muted"></span>
           </div>
         </section>
@@ -70,6 +70,7 @@
                   <option value="auto" data-i18n="format.auto"></option>
                   <option value="inline" data-i18n="format.inline"></option>
                   <option value="ownline" data-i18n="format.ownline"></option>
+                  <option value="none" data-i18n="format.none"></option>
                 </select>
               </label>
               <label><span data-i18n="expected.label"></span>

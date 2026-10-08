@@ -9,6 +9,7 @@ Thumbs.db
 /transcripts/
 *.mp3
 *.docx
+*.pdf
 
 # Local tooling
 .claude/

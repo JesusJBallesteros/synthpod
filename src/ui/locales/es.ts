@@ -9,7 +9,7 @@ export const es: Record<MessageKey, string> = {
   'ui.language': 'Idioma de la interfaz',
 
   'step.transcript': 'Transcripción',
-  'input.placeholder': 'Pega aquí una transcripción o suelta un archivo (.txt, .md, .docx, .srt, .vtt).\n\nAna: Bienvenidos de nuevo al programa.\nLuis: Gracias por invitarme.',
+  'input.placeholder': 'Pega aquí una transcripción o suelta un archivo (.txt, .md, .docx, .srt, .vtt, .pdf).\n\nAna: Bienvenidos de nuevo al programa.\nLuis: Gracias por invitarme.',
   'file.open': 'Abrir archivo…',
   'file.reading': 'Leyendo {name}…',
   'file.loaded': '{name} cargado ({words} palabras).',
@@ -40,7 +40,7 @@ export const es: Record<MessageKey, string> = {
   'found.ownline': 'etiquetas en una línea aparte',
   'found.bracket': 'etiquetas como «[Nombre] texto»',
   'found.dash': 'etiquetas como «Nombre — texto»',
-  'found.none': 'no se han encontrado etiquetas de hablante',
+  'found.none': 'sin hablantes: lo lee una sola voz',
   'table.speaker': 'Hablante (edita para renombrar)',
   'table.turns': 'Intervenciones',
   'table.words': 'Palabras',
@@ -207,7 +207,7 @@ export const es: Record<MessageKey, string> = {
   'review.position': "{i} de {n}",
   'review.readAs': "Con los ajustes actuales se lee así: «{text}»",
   'review.addWord': "Añadir a la lista de palabras",
-  'chapters.label': "Añadir marcas de capítulo al MP3, una por intervención (los reproductores de pódcast las muestran)",
+  'chapters.label': "Añadir marcas de capítulo al MP3, una por intervención o sección (los reproductores de pódcast las muestran)",
   'captions.srt': "Guardar subtítulos (.srt)",
   'captions.vtt': "Guardar subtítulos (.vtt)",
   'translate.title': "Traducir (opcional)",
@@ -247,6 +247,9 @@ export const es: Record<MessageKey, string> = {
   'device.threads.failed': "el multihilo no arrancó en este navegador, así que se usa un solo hilo de procesador (varias veces más lento)",
   'engine.singleThread': "El multihilo no arrancó en este navegador, así que la aplicación continuó con un solo hilo de procesador. Funciona, pero es varias veces más lenta.",
   'render.startingEngine': "Iniciando el motor de voz {engine}…",
+
+  'format.none': "Sin hablantes: una sola voz lo lee todo",
+  'speaker.reader': "Lector",
 
   'offline.ready': 'Lista para funcionar sin conexión. Las voces que ya has usado están disponibles sin internet.',
   'offline.saving': 'Guardando la aplicación para usarla sin conexión…',

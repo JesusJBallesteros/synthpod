@@ -8,6 +8,8 @@ export interface Cue {
   turn: number;
   speaker: string | null;
   text: string;
+  /** The section heading of this turn, in text without speakers. */
+  title?: string;
 }
 
 export interface Chapter {
@@ -44,7 +46,10 @@ export function toVtt(cues: Cue[]): string {
 
 const MAX_CHAPTERS = 255; // an ID3 table of contents holds its entry count in one byte
 
-/** One chapter per turn, titled "Speaker: first words…". Long transcripts are grouped to fit the limit. */
+/**
+ * One chapter per turn, titled "Speaker: first words…", or with the section heading for text
+ * without speakers. Long transcripts are grouped to fit the limit.
+ */
 export function toChapters(cues: Cue[]): Chapter[] {
   const byTurn: Cue[][] = [];
   for (const cue of cues) {
@@ -59,7 +64,7 @@ export function toChapters(cues: Cue[]): Chapter[] {
     const words = group.map((c) => c.text).join(' ');
     const opening = words.length > 60 ? `${words.slice(0, 60).replace(/\s+\S*$/, '')}…` : words;
     chapters.push({
-      title: group[0].speaker ? `${group[0].speaker}: ${opening}` : opening,
+      title: group[0].title ?? (group[0].speaker ? `${group[0].speaker}: ${opening}` : opening),
       startMs: Math.round(group[0].start * 1000),
       endMs: Math.round(group[group.length - 1].end * 1000),
     });

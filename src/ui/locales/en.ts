@@ -9,7 +9,7 @@ export const en = {
   'ui.language': 'Interface language',
 
   'step.transcript': 'Transcript',
-  'input.placeholder': 'Paste a transcript here, or drop a file (.txt, .md, .docx, .srt, .vtt).\n\nAnna: Welcome back to the show.\nBen: Thanks for having me.',
+  'input.placeholder': 'Paste a transcript here, or drop a file (.txt, .md, .docx, .srt, .vtt, .pdf).\n\nAnna: Welcome back to the show.\nBen: Thanks for having me.',
   'file.open': 'Open file…',
   'file.reading': 'Reading {name}…',
   'file.loaded': 'Loaded {name} ({words} words).',
@@ -40,7 +40,7 @@ export const en = {
   'found.ownline': 'labels on their own line',
   'found.bracket': 'labels like “[Name] text”',
   'found.dash': 'labels like “Name — text”',
-  'found.none': 'no speaker labels found',
+  'found.none': 'no speakers: read by one voice',
   'table.speaker': 'Speaker (edit to rename)',
   'table.turns': 'Turns',
   'table.words': 'Words',
@@ -207,7 +207,7 @@ export const en = {
   'review.position': "{i} of {n}",
   'review.readAs': "With the current settings this is read as: “{text}”",
   'review.addWord': "Add to word list",
-  'chapters.label': "Add chapter markers to the MP3, one per speaker turn (podcast players show them)",
+  'chapters.label': "Add chapter markers to the MP3, one per speaker turn or section (podcast players show them)",
   'captions.srt': "Save captions (.srt)",
   'captions.vtt': "Save captions (.vtt)",
   'translate.title': "Translate (optional)",
@@ -247,6 +247,9 @@ export const en = {
   'device.threads.failed': "multi-threading did not start in this browser, so one processor thread is used (several times slower)",
   'engine.singleThread': "Multi-threading did not start in this browser, so the app continued on one processor thread. Rendering works but is several times slower.",
   'render.startingEngine': "Starting the {engine} speech engine…",
+
+  'format.none': "No speakers: one voice reads everything",
+  'speaker.reader': "Reader",
 
   'offline.ready': 'Ready to work offline. Voices you have already used are available without internet.',
   'offline.saving': 'Saving the app for offline use…',

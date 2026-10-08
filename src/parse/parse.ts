@@ -3,9 +3,12 @@ import { convertVoiceTags, isDirection, peelLeadingTimecode, stripDirections, st
 export interface Turn {
   speaker: string | null; // null = unassigned
   text: string;
+  /** For text without speakers: the heading that opens this section. It becomes a chapter. */
+  title?: string;
 }
 
-export type FormatHint = 'auto' | 'inline' | 'ownline';
+/** 'none' = prose with no speakers: nothing is taken for a speaker label. */
+export type FormatHint = 'auto' | 'inline' | 'ownline' | 'none';
 export type Format = 'inline' | 'ownline' | 'bracket' | 'dash' | 'none';
 
 export interface ParseOptions {
@@ -33,7 +36,7 @@ const DASH_RE = new RegExp(String.raw`^${LABEL}\s+[—–-]\s+(\S.*)$`);
 
 const TITLES = /^(?:(?:prof|dr|mr|mrs|ms|herr|frau|sr|sra|mme|mag|ing|dipl\.-ing)\.?\s+)+/i;
 
-type Detector = 'colon' | 'inline' | 'ownline' | 'bracket' | 'dash';
+type Detector = 'colon' | 'inline' | 'ownline' | 'bracket' | 'dash' | 'none';
 
 function validLabel(label: string): boolean {
   const words = label.trim().split(/\s+/);
@@ -51,6 +54,7 @@ export function nameKey(raw: string): string {
 }
 
 function matchLabel(line: string, detector: Detector): { label: string; rest: string } | null {
+  if (detector === 'none') return null;
   const re = detector === 'bracket' ? BRACKET_RE : detector === 'dash' ? DASH_RE : COLON_RE;
   const m = re.exec(line);
   if (!m || !validLabel(m[1])) return null;
@@ -75,6 +79,13 @@ function run(lines: string[], detector: Detector, opts: ParseOptions): Candidate
 
   for (const raw of lines) {
     const line = peelLeadingTimecode(stripMarkup(raw)).trim();
+    // In text without speakers, a markdown heading ("## Methods") starts a new section.
+    if (detector === 'none' && /^\s*#{1,6}\s+\S/.test(raw) && line) {
+      const title = line.replace(/[.:]$/, '');
+      current = { speaker: null, text: /[.!?…]$/.test(line) ? `${line}\n\n` : `${line}.\n\n`, title };
+      turns.push(current);
+      continue;
+    }
     const m = matchLabel(line, detector);
     if (m) {
       // Match case-insensitively, but show the name as first written.
@@ -131,7 +142,7 @@ function run(lines: string[], detector: Detector, opts: ParseOptions): Candidate
       let text = t.text;
       if (opts.stripTimecodes) text = stripTimecodes(text);
       if (opts.stripDirections) text = stripDirections(text);
-      return { speaker: t.speaker, text: tidy(text) };
+      return { ...t, text: tidy(text) };
     })
     .filter((t) => /[\p{L}\p{N}]/u.test(t.text));
   return { turns: cleaned, labelled, ownLine };
@@ -148,7 +159,8 @@ export function parseTranscript(input: string, options: Partial<ParseOptions> = 
     if (!best || cand.labelled > best.cand.labelled) best = { detector, cand };
   }
   const { detector, cand } = best!;
-  if (cand.labelled === 0) return { turns: cand.turns, speakers: [], format: 'none' };
+  // No speakers at all: read it as plain text, where headings mark the sections.
+  if (cand.labelled === 0) return { turns: detector === 'none' ? cand.turns : run(lines, 'none', opts).turns, speakers: [], format: 'none' };
   const format: Format = detector === 'colon' ? (cand.ownLine > cand.labelled / 2 ? 'ownline' : 'inline') : detector;
   const speakers = [...new Set(cand.turns.flatMap((t) => (t.speaker ? [t.speaker] : [])))];
   return { turns: cand.turns, speakers, format };

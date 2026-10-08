@@ -35,6 +35,15 @@ describe('chapters', () => {
     ]);
   });
 
+  it('names a chapter after its section heading when there is one', () => {
+    const sections: Cue[] = [
+      { start: 0, end: 2, turn: 0, speaker: null, text: 'Front matter.' },
+      { start: 3, end: 4, turn: 1, speaker: null, text: 'Methods.', title: 'Methods' },
+      { start: 4.2, end: 9, turn: 1, speaker: null, text: 'We did this and that.', title: 'Methods' },
+    ];
+    expect(toChapters(sections).map((c) => c.title)).toEqual(['Front matter.', 'Methods']);
+  });
+
   it('groups turns when there are more than a table of contents can hold', () => {
     const many = Array.from({ length: 600 }, (_, i) => ({ start: i, end: i + 0.5, turn: i, speaker: 'A', text: `Line ${i}.` }));
     const chapters = toChapters(many);
@@ -92,6 +101,7 @@ describe('translation routing', () => {
     const translated = ['Un avance.', 'Hola.', '¿Cómo estás?', 'Párrafo nuevo.', 'Bien.'];
     const texts = rebuildTurns(3, units, translated);
     expect(texts).toEqual(['Un avance.', 'Hola. ¿Cómo estás?\n\nPárrafo nuevo.', 'Bien.']);
+    expect(toTranscript([null, null], ['Título.\n\nCuerpo.', 'Suelto.'], [true, false])).toBe('## Título.\n\nCuerpo.\n\nSuelto.');
     expect(toTranscript([null, 'Anna', 'Ben'], texts)).toBe('Un avance.\n\nAnna: Hola. ¿Cómo estás?\n\nPárrafo nuevo.\n\nBen: Bien.');
   });
 });

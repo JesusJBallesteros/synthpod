@@ -45,10 +45,13 @@ export function rebuildTurns(turnCount: number, units: TranslationUnit[], transl
   return turns.map((paragraphs) => paragraphs.filter(Boolean).map((sentences) => sentences.join(' ')).join('\n\n'));
 }
 
-/** Write turns as a transcript with "Name: text" labels. */
-export function toTranscript(speakers: (string | null)[], texts: string[]): string {
+/**
+ * Write turns as a transcript with "Name: text" labels. A turn that opens a section (its text
+ * starts with the heading) gets the heading mark back, so the chapters survive.
+ */
+export function toTranscript(speakers: (string | null)[], texts: string[], sections: boolean[] = []): string {
   return texts
-    .map((text, i) => (speakers[i] ? `${speakers[i]}: ${text}` : text))
+    .map((text, i) => (speakers[i] ? `${speakers[i]}: ${text}` : sections[i] ? `## ${text}` : text))
     .filter((turn) => turn.trim())
     .join('\n\n');
 }

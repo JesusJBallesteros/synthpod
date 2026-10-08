@@ -65,7 +65,7 @@ The transcript box is the first thing in every picture above.
 | Control | What it does |
 |---|---|
 | **Transcript box** | Paste your text here, or drop a file onto it. You can edit the text freely; everything else updates as you type. |
-| **Open file…** | Choose a file instead. These types work: `.txt`, `.md`, `.docx`, `.srt` and `.vtt`. The MP3 is later named after the file. |
+| **Open file…** | Choose a file instead. These types work: `.txt`, `.md`, `.docx`, `.srt`, `.vtt` and `.pdf`. The MP3 is later named after the file. |
 | **Save transcript…** | Stores the text as it now stands in the box, as a `.txt` file: with your corrections, or translated. After a translation the file name gets the language added, for example `interview (es).txt`. |
 
 The app needs to know who is speaking. It recognises the usual ways of writing that down:
@@ -81,6 +81,29 @@ The app needs to know who is speaking. It recognises the usual ways of writing t
 
 A name counts as a speaker only if it appears more than once, so a stray "Note:" in the text is not mistaken for a person.
 
+### Papers and other documents without speakers (PDF)
+
+Open a `.pdf` such as a research paper, an essay or a report, and the app treats it as running text for a single voice. There is one voice card, called **Reader**, already set to the language of the document; pick the voice you like and render as usual.
+
+To make the result pleasant to listen to, the app leaves out what a listener does not need, where it can recognise it:
+
+- page headers and footers that repeat on most pages, and page numbers;
+- footnotes at the foot of the page, and the small raised numbers that point to them;
+- small print above the start of the text on the first page, such as a copyright notice.
+
+It also joins the lines of each paragraph and rejoins words split at the end of a line.
+
+**Sections become chapters.** The app marks each section heading with `##` at the start of its line, as in `## Methods`. Every marked heading starts a chapter in the MP3, named after the heading, so a long paper can be navigated in a podcast player. The headings are found in one of two ways:
+
+- from the document's own outline (the bookmarks some PDFs carry), when it has one;
+- otherwise by their look: a short line on its own that is written in capitals, set in larger type, or starts with a section number such as `2.1`.
+
+You are in control of the result: add `## ` in front of any line to make it a chapter, or delete the marks from a line that is not really a heading. The marks themselves are not read aloud. A heading in capitals is read as an ordinary phrase, with a pause after it.
+
+These are educated guesses, so check the text in the box before rendering: delete anything that slipped through, such as a table, a figure caption or a list of references. Only PDFs that contain real text work; a scanned document is a picture of text and comes out empty.
+
+Any other text without speakers can be read the same way: under **Reading options** in step 2, set **Speaker label format** to **No speakers: one voice reads everything**. Lines starting with `## ` make chapters there too.
+
 ## 2. Check the text
 
 ![Step 2 in the dark theme, with an item selected, how it will be read, and the Reading options opened](docs/images/step2-check.png)
@@ -95,7 +118,7 @@ Voices can stumble over numbers, abbreviations, words in capitals and web addres
 | "With the current settings this is read as…" | Appears when the pronunciation settings already change how the item is read. In the picture, "14%" will be read as "14 percent" and "e.g." as "for example". |
 | **Add to word list** | Puts the item into your pronunciation list in step 6 and takes you there to type how it should be said. |
 | **Reading options** | Opens the settings below. You only need them if the app misreads your transcript. |
-| Speaker label format | Tell the app which way the speakers are written, if its guess is wrong. |
+| Speaker label format | Tell the app which way the speakers are written, if its guess is wrong, or that there are no speakers at all. |
 | Expected speakers | How many people speak. Leave it at 0 to let the app decide. |
 | Remove timecodes | On by default. Removes marks such as `[00:12:03]`. |
 | Remove stage directions | On by default. Removes notes such as `(laughs)` or `[inaudible]`. Ordinary brackets in a sentence are kept. |
@@ -212,7 +235,7 @@ The defaults suit most transcripts. Everything here is remembered in your browse
 | **Quality** | The MP3 bitrate. Higher means a larger file; 128 kbps is plenty for speech. |
 | **Channels** | Mono is the right choice for speech. Stereo puts the same sound on both sides, for players that require it. |
 | **Sample rate** | Leave it on "Same as the voices" unless a player needs a specific rate. |
-| **Add chapter markers** | Stores one chapter per speaker turn in the MP3, titled with the speaker and their first words. Players that support MP3 chapters use them to show a list of sections; many podcast apps do, and some general players do not. |
+| **Add chapter markers** | Stores one chapter per speaker turn in the MP3, titled with the speaker and their first words. For a document without speakers, there is one chapter per section, titled with its heading. Players that support MP3 chapters use them to show a list of sections; many podcast apps do, and some general players do not. |
 
 ### File information and presets
 
@@ -275,6 +298,7 @@ Other browsers, as far as can be told without testing:
 ## Troubleshooting
 
 - **No speakers were found.** Check that names are followed by a colon, or pick the label style under **Reading options** in step 2.
+- **A PDF comes out empty or jumbled.** It is probably a scan (pictures of pages), or has an unusual layout such as tables or several columns that the app could not follow. Copy the text from your PDF reader and paste it instead.
 - **Too many speakers were found.** Set **Expected speakers**, or merge the extra ones.
 - **The Render button is greyed out.** Choose a language; every speaker needs a voice.
 - **Some sentences were left out.** The status line says how many. Press **Render MP3** again; only the missing ones are retried.

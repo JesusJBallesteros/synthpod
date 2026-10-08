@@ -1,6 +1,6 @@
 {
   "name": "synthpod",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "In-browser multi-voice transcript to MP3 converter",
@@ -26,7 +26,8 @@
     "franc-min": "^6.2.0",
     "kokoro-js": "^1.2.1",
     "mammoth": "^1.13.0",
-    "onnxruntime-web": "^1.30.0"
+    "onnxruntime-web": "^1.30.0",
+    "pdfjs-dist": "^6.4.299"
   },
   "devDependencies": {
     "music-metadata": "^12.0.0",
