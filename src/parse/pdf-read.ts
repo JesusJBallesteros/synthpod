@@ -24,7 +24,7 @@ export async function readPdf(data: ArrayBuffer): Promise<PdfContent> {
         height,
         items: content.items.flatMap((item) =>
           'str' in item
-            ? [{ str: item.str, x: item.transform[4], y: item.transform[5], size: Math.hypot(item.transform[2], item.transform[3]), width: item.width }]
+            ? [{ str: item.str, x: item.transform[4], y: item.transform[5], size: Math.hypot(item.transform[2], item.transform[3]), width: item.width, eol: item.hasEOL, font: item.fontName }]
             : [],
         ),
       });

@@ -265,6 +265,7 @@
             <button id="saveVtt" hidden data-i18n="captions.vtt"></button>
             <button id="saveCue" hidden data-i18n="chapters.cue" data-i18n-attr="title:chapters.cue.title"></button>
             <button id="clearCache" class="quiet" data-i18n="cache.clear" data-i18n-attr="title:cache.clear.title"></button>
+            <span id="cacheSize" class="muted" data-i18n-attr="title:cache.size.title"></span>
           </div>
           <progress id="progress" value="0" max="1" hidden></progress>
           <p id="status" class="muted" role="status"></p>
@@ -286,7 +287,13 @@
     </dialog>
 
     <footer class="muted">
-      <span id="offlineStatus"></span>
+      <p>
+        <span id="versionInfo"></span>
+        <button id="checkUpdate" class="quiet" data-i18n="update.check"></button>
+        <span id="updateStatus" role="status"></span>
+      </p>
+      <p id="offlineStatus"></p>
+      <p data-i18n-html="footer.legal"></p>
     </footer>
     <script type="module" src="/src/ui/main.ts"></script>
   </body>

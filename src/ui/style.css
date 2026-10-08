@@ -106,9 +106,26 @@ h1 {
 }
 
 footer {
-  min-height: 1.5em;
   padding-bottom: 32px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+}
+
+footer p {
+  margin: 4px 0;
+  max-width: 90ch;
+}
+
+footer p:empty {
+  display: none;
+}
+
+footer a {
+  color: inherit;
+}
+
+footer button.quiet {
+  padding: 0 4px;
+  font-size: inherit;
 }
 
 /* ---------- Steps ---------- */
@@ -633,3 +650,9 @@ dialog::backdrop {
   margin-top: 10px;
 }
 
+
+/* How much the render cache holds, beside the button that clears it. */
+#cacheSize {
+  align-self: center;
+  font-size: 0.85rem;
+}

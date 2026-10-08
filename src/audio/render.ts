@@ -163,13 +163,7 @@ function balanceVoices(segments: Segment[], casts: Cast[], target: number): void
   });
   for (const indexes of groups.values()) {
     const rate = segments[indexes[0]].audio.sampleRate;
-    const joined = new Float32Array(indexes.reduce((n, i) => n + segments[i].audio.pcm.length, 0));
-    let offset = 0;
-    for (const i of indexes) {
-      joined.set(segments[i].audio.pcm, offset);
-      offset += segments[i].audio.pcm.length;
-    }
-    const gain = gainToTarget(measureLufs(joined, rate), target);
+    const gain = gainToTarget(measureLufs(indexes.map((i) => segments[i].audio.pcm), rate), target);
     for (const i of indexes) segments[i].gain *= gain;
   }
 }

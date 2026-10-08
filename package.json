@@ -1,6 +1,6 @@
 {
   "name": "synthpod",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "In-browser multi-voice transcript to MP3 converter",

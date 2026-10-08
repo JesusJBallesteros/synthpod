@@ -20,6 +20,14 @@ describe('loudness', () => {
     }
   });
 
+  it('measures audio given in pieces exactly as if it were joined', () => {
+    const rate = 22050;
+    const whole = sine(997, 0.3, 4, rate).map((v, i) => v * (0.5 + 0.5 * Math.sin(i / 5000)));
+    const pieces = [whole.subarray(0, 1234), whole.subarray(1234, 40000), whole.subarray(40000)];
+    expect(measureLufs(pieces, rate)).toBe(measureLufs(whole, rate));
+    expect(measureLufs([new Float32Array(10)], rate)).toBe(-Infinity);
+  });
+
   it('ignores silence between speech when measuring', () => {
     const rate = 24000;
     const tone = sine(997, 0.1, 2, rate);

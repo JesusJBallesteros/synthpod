@@ -81,7 +81,7 @@ export const es: Record<MessageKey, string> = {
   'engine.note': 'Piper cubre todos los idiomas y es rápido. Kokoro suena más natural, pero solo habla inglés, es mucho más lento y descarga un modelo mayor (entre 90 y 330 MB) la primera vez que se usa.',
   'hw.summary': 'Hardware, software y tiempos de procesamiento esperados',
   'hw.need': 'Qué necesitas',
-  'hw.browser': '<strong>Navegador:</strong> se recomienda una versión reciente de Chrome, Edge o Brave; la aplicación solo se ha probado en ellos. Firefox y Safari aún no se han probado.',
+  'hw.browser': '<strong>Navegador:</strong> una versión reciente de Chrome, Edge, Brave o Firefox; la aplicación se ha probado y funciona bien en los cuatro. Safari aún no se ha probado.',
   'hw.memory': '<strong>Memoria:</strong> 4 GB bastan para Piper y transcripciones cortas. Se recomiendan 8 GB. Usa 16 GB para Kokoro o para grabaciones de más de una hora.',
   'hw.disk': '<strong>Disco:</strong> cada voz de Piper ocupa entre 20 y 110 MB y Kokoro entre 90 y 330 MB; se descargan una sola vez. El audio generado también se guarda para repetir el proceso más rápido, unos 3 MB por minuto, hasta que lo borres.',
   'hw.internet': '<strong>Internet:</strong> solo para descargar las voces la primera vez. Tu transcripción nunca se envía a ningún sitio.',
@@ -185,6 +185,9 @@ export const es: Record<MessageKey, string> = {
   'cache.clear': 'Vaciar la caché de audio',
   'cache.clear.title': 'Las frases generadas se guardan en este navegador para que repetir el proceso sea rápido. Esto las borra.',
   'cache.cleared': 'Se ha vaciado la caché de frases generadas.',
+  'cache.size': '{size} MB en disco',
+  'cache.empty': 'vacía',
+  'cache.size.title': 'Espacio que ocupan en este navegador las frases generadas.',
   'render.downloading': 'Descargando el modelo de voz de {engine}: {percent} %',
   'render.progress': 'Sintetizando {done} de {total} frases…',
   'render.progress.seconds': 'Sintetizando {done} de {total} frases, quedan unos {n} s…',
@@ -253,6 +256,14 @@ export const es: Record<MessageKey, string> = {
 
   'chapters.cue': "Guardar capítulos (.cue)",
   'chapters.cue.title': "Un archivo pequeño con la lista de capítulos, para reproductores que no muestran los capítulos incluidos en un MP3 (VLC, por ejemplo). Guárdalo en la misma carpeta que el MP3 y ábrelo en lugar del MP3.",
+
+  'version.info': "SynthPod {version}, compilado el {date}.",
+  'update.check': "Buscar actualizaciones",
+  'update.checking': "Comprobando…",
+  'update.current': "Tienes la versión más reciente.",
+  'update.reloading': "Hay una versión más reciente. Recargando…",
+  'update.failed': "No se pudo buscar actualizaciones. Hace falta conexión a internet y usar la aplicación instalada o publicada.",
+  'footer.legal': "© 2026 Jesus J. Ballesteros. SynthPod es software libre bajo la <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/LICENSE\">licencia MIT</a> y se ofrece tal cual, sin garantía de ningún tipo. <a href=\"https://github.com/JesusJBallesteros/synthpod\">Código fuente</a>. Los motores de voz, las voces y los modelos de traducción que descarga son obra de terceros y tienen <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/docs/DEVELOPMENT.md#components-and-licences\">sus propias licencias</a>; cada voz de Piper tiene la suya. Eres responsable de tener derecho a usar los textos que conviertes y del uso que hagas del audio.",
 
   'offline.ready': 'Lista para funcionar sin conexión. Las voces que ya has usado están disponibles sin internet.',
   'offline.saving': 'Guardando la aplicación para usarla sin conexión…',

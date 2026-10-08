@@ -81,7 +81,7 @@ export const en = {
   'engine.note': 'Piper covers every language and renders quickly. Kokoro sounds more natural but only speaks English, renders much more slowly, and downloads a larger model (about 90 to 330 MB) the first time it is used.',
   'hw.summary': 'Hardware, software and expected rendering times',
   'hw.need': 'What you need',
-  'hw.browser': '<strong>Browser:</strong> a current Chrome, Edge or Brave is recommended; the app has only been tested there. Firefox and Safari have not been tested yet.',
+  'hw.browser': '<strong>Browser:</strong> a current Chrome, Edge, Brave or Firefox; the app has been tested and works well in all four. Safari has not been tested yet.',
   'hw.memory': '<strong>Memory:</strong> 4 GB is enough for Piper and short transcripts. 8 GB is recommended. Use 16 GB for Kokoro or for recordings longer than an hour.',
   'hw.disk': '<strong>Disk:</strong> each Piper voice is 20 to 110 MB and Kokoro is 90 to 330 MB, downloaded once. Rendered audio is also kept for fast re-rendering, at about 3 MB per minute, until you clear it.',
   'hw.internet': '<strong>Internet:</strong> only to download voices the first time. Your transcript is never uploaded.',
@@ -185,6 +185,9 @@ export const en = {
   'cache.clear': 'Clear render cache',
   'cache.clear.title': 'Rendered sentences are kept in this browser so re-rendering is fast. This removes them.',
   'cache.cleared': 'Cleared the cache of rendered sentences.',
+  'cache.size': '{size} MB on disk',
+  'cache.empty': 'empty',
+  'cache.size.title': 'How much room the rendered sentences take up in this browser.',
   'render.downloading': 'Downloading {engine} voice model: {percent}%',
   'render.progress': 'Synthesising {done} of {total} sentences…',
   'render.progress.seconds': 'Synthesising {done} of {total} sentences, about {n}s left…',
@@ -253,6 +256,14 @@ export const en = {
 
   'chapters.cue': "Save chapters (.cue)",
   'chapters.cue.title': "A small file listing the chapters, for players that do not show the chapters inside an MP3 (VLC, for example). Keep it in the same folder as the MP3 and open it instead of the MP3.",
+
+  'version.info': "SynthPod {version}, built on {date}.",
+  'update.check': "Check for updates",
+  'update.checking': "Checking…",
+  'update.current': "You have the latest version.",
+  'update.reloading': "A newer version was found. Reloading…",
+  'update.failed': "Could not check for updates. This needs an internet connection and the installed or published app.",
+  'footer.legal': "© 2026 Jesus J. Ballesteros. SynthPod is free software under the <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/LICENSE\">MIT licence</a> and is provided as it is, without warranty of any kind. <a href=\"https://github.com/JesusJBallesteros/synthpod\">Source code</a>. The speech engines, voices and translation models it downloads are the work of others and have <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/docs/DEVELOPMENT.md#components-and-licences\">their own licences</a>; Piper voices are licensed one by one. You are responsible for having the right to use the texts you convert, and for how you use the audio.",
 
   'offline.ready': 'Ready to work offline. Voices you have already used are available without internet.',
   'offline.saving': 'Saving the app for offline use…',

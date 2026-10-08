@@ -20,3 +20,27 @@ export function registerServiceWorker(onOfflineReady: (ready: boolean) => void):
     else sw.addEventListener('controllerchange', reload, { once: true });
   }
 }
+
+/**
+ * Ask the server whether a newer version of the app exists. If so, wait for it to take over and
+ * reload the page into it. Resolves to 'current' when there is nothing newer, and to
+ * 'unavailable' when there is no service worker (development) or no connection.
+ */
+export async function checkForUpdate(): Promise<'reloading' | 'current' | 'unavailable'> {
+  if (!('serviceWorker' in navigator)) return 'unavailable';
+  try {
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (!registration) return 'unavailable';
+    await registration.update();
+    if (!registration.installing && !registration.waiting) return 'current';
+    // The new worker activates at once and takes control; give it a moment, then reload anyway.
+    await new Promise<void>((resolve) => {
+      navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true });
+      setTimeout(resolve, 15_000);
+    });
+    location.reload();
+    return 'reloading';
+  } catch {
+    return 'unavailable';
+  }
+}

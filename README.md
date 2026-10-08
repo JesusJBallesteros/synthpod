@@ -87,20 +87,23 @@ Open a `.pdf` such as a research paper, an essay or a report, and the app treats
 
 To make the result pleasant to listen to, the app leaves out what a listener does not need, where it can recognise it:
 
-- page headers and footers that repeat on most pages, and page numbers;
-- footnotes at the foot of the page, and the small raised numbers that point to them;
-- small print above the start of the text on the first page, such as a copyright notice.
+- page headers and footers, and page numbers;
+- footnotes at the foot of the page, and the small raised numbers that point to them or to the references;
+- notes printed in the margin beside the text, such as a glossary or the authors' addresses;
+- figure captions, tables and boxes set in smaller print, when they carry a label such as "Fig. 2", "Table 1" or "Box 3";
+- small print above the start of the text on the first page, such as a copyright notice;
+- the list of references at the end, and everything after it.
 
-It also joins the lines of each paragraph and rejoins words split at the end of a line.
+It also joins the lines of each paragraph, rejoins words split at the end of a line, and reads a page with two columns one column after the other.
 
 **Sections become chapters.** The app marks each section heading with `##` at the start of its line, as in `## Methods`. Every marked heading starts a chapter in the MP3, named after the heading, so a long paper can be navigated in a podcast player. The headings are found in one of two ways:
 
 - from the document's own outline (the bookmarks some PDFs carry), when it has one;
-- otherwise by their look: a short line on its own that is written in capitals, set in larger type, or starts with a section number such as `2.1`.
+- otherwise by their look: a short line on its own that is written in capitals, set in larger type or in a different typeface from the text (bold, for instance), or starts with a section number such as `2.1`.
 
 You are in control of the result: add `## ` in front of any line to make it a chapter, or delete the marks from a line that is not really a heading. The marks themselves are not read aloud. A heading in capitals is read as an ordinary phrase, with a pause after it.
 
-These are educated guesses, so check the text in the box before rendering: delete anything that slipped through, such as a table, a figure caption or a list of references. Only PDFs that contain real text work; a scanned document is a picture of text and comes out empty.
+These are educated guesses, so check the text in the box before rendering: delete anything that slipped through, such as a table without a label or the authors' names under the title. A box of side text in a magazine-style paper is left out along with the figures, so paste it in by hand if you want it read. Only PDFs that contain real text work; a scanned document is a picture of text and comes out empty.
 
 Any other text without speakers can be read the same way: under **Reading options** in step 2, set **Speaker label format** to **No speakers: one voice reads everything**. Lines starting with `## ` make chapters there too.
 
@@ -266,7 +269,7 @@ If you change one speaker's voice and render again, only that speaker is rendere
 | **Save MP3…** | Stores the finished file on your computer. |
 | **Save captions (.srt)** / **(.vtt)** | Stores the text with its exact timings. `.srt` is the most widely supported subtitle format; `.vtt` is for web video players. |
 | **Save chapters (.cue)** | Stores a small "cue sheet" that lists the chapters. Use it with players that do not show the chapters inside an MP3, such as VLC: save the MP3 first, keep the `.cue` file in the same folder under the same name, and open the `.cue` file instead of the MP3. The player then shows the chapters as a list. |
-| **Clear render cache** | Deletes the audio kept for fast re-rendering, to free disk space. |
+| **Clear render cache** | Deletes the audio kept for fast re-rendering, to free disk space. The note beside the button says how much space it takes up at the moment, for example "42.5 MB on disk". |
 | The player | Listen to the result in the page before saving. |
 
 ## Using it without internet
@@ -275,9 +278,13 @@ After your first visit the app keeps a copy of itself in the browser. A note at 
 
 In Chrome, Edge and Brave you can also install it like a program: use the install icon in the address bar, or the browser menu → "Install SynthPod".
 
+### Staying up to date
+
+The bottom of the page shows the version you are running and the date it was built. The app normally updates itself whenever you open it with an internet connection. **Check for updates** next to the version asks straight away: if there is a newer version the page reloads into it, and otherwise it tells you that you have the latest one. Your settings, voices and saved audio are kept.
+
 ## What you need
 
-- **Browser:** a current Chrome, Edge or Brave, on Windows, macOS or Linux. Firefox and Safari have not been tested; see the notes below.
+- **Browser:** a current Chrome, Edge, Brave or Firefox, on Windows, macOS or Linux. The app has been tested in all four and works well in each. Safari has not been tested; see the notes below.
 - **Memory:** 8 GB recommended (4 GB is enough for short transcripts with Piper; 16 GB for Kokoro or recordings over an hour).
 - **Internet:** only for downloading voices the first time.
 
@@ -290,16 +297,16 @@ Measured time to render 30 minutes of audio, on a recent laptop with a 16-thread
 
 Other computers will differ: Piper scales with the number of processor cores, and Kokoro with the graphics card.
 
-Other browsers, as far as can be told without testing:
+Differences between browsers:
 
-- **Firefox** has everything the app relies on in recent versions, so it should work. Files are saved through the normal download prompt instead of a "Save as" window, and Kokoro uses the graphics card only where Firefox supports WebGPU.
-- **Safari** is the least certain. It would run on a single processor thread, so rendering would be several times slower, and it may download voices again on each visit because it cannot store them the same way.
+- **Firefox** works in every respect. Files are saved through the normal download prompt instead of a "Save as" window, and Kokoro uses the graphics card only where Firefox supports WebGPU.
+- **Safari** has not been tested and is the least certain. It would run on a single processor thread, so rendering would be several times slower, and it may download voices again on each visit because it cannot store them the same way.
 - **Linux** with Chrome usually has WebGPU switched off, so Kokoro runs on the processor there; Piper is unaffected.
 
 ## Troubleshooting
 
 - **No speakers were found.** Check that names are followed by a colon, or pick the label style under **Reading options** in step 2.
-- **A PDF comes out empty or jumbled.** It is probably a scan (pictures of pages), or has an unusual layout such as tables or several columns that the app could not follow. Copy the text from your PDF reader and paste it instead.
+- **A PDF comes out empty or jumbled.** It is probably a scan (pictures of pages), or has an unusual layout, such as three or more columns or text wrapped around pictures, that the app could not follow. Copy the text from your PDF reader and paste it instead.
 - **Too many speakers were found.** Set **Expected speakers**, or merge the extra ones.
 - **The Render button is greyed out.** Choose a language; every speaker needs a voice.
 - **Some sentences were left out.** The status line says how many. Press **Render MP3** again; only the missing ones are retried.
@@ -308,7 +315,7 @@ Other browsers, as far as can be told without testing:
 - **"Starting the speech engine…" stays for a long time.** In some browsers the engine's extra processor threads fail to start. After 40 seconds the app notices, continues on a single thread and remembers that for next time. Rendering then works, but several times slower; the hardware panel in step 4 says when this has happened.
 - **A preview or render seems stuck for another reason.** If the speech engine stops answering, the app says so after a couple of minutes and restarts it; press the button again. If it keeps happening, close other heavy tabs: translation and Kokoro both use a lot of memory.
 - **"Downloading … voice model" appears in the middle of a render.** That is normal: each voice is loaded the first time one of its sentences comes up.
-- **No chapters show in my player.** The chapters are inside the MP3, but several common players, VLC and Windows Media Player among them, do not display chapters from MP3 files. Press **Save chapters (.cue)** in step 7 and open that file in the player instead, or listen in a podcast app, which does show them. If you rename or move the MP3, the `.cue` file must be renamed and moved with it.
+- **No chapters show in my player.** The chapters are inside the MP3, but several common players, VLC and Windows Media Player among them, do not display chapters from MP3 files. Press **Save chapters (.cue)** in step 7 and open that file in the player instead, or listen in a podcast app, which does show them. In VLC the cue sheet gives one playlist entry per chapter that you can step through with Next and Previous, but VLC labels every entry with the title of the MP3 rather than the chapter title. If you rename or move the MP3, the `.cue` file must be renamed and moved with it.
 
 ## Privacy
 
@@ -316,6 +323,6 @@ Your transcript stays on your computer. The only things downloaded are the app i
 
 ## Licence and credits
 
-SynthPod is free software under the [MIT licence](LICENSE). Piper voices have their own individual licences; check a voice's licence before using its audio commercially.
+SynthPod is free software under the [MIT licence](LICENSE), provided as it is, without warranty. The speech engines, voices and translation models it downloads are the work of others and have their own licences. Piper voices are licensed one by one; check a voice's licence before using its audio commercially. You are responsible for having the right to use the texts you convert. The same notice is shown at the bottom of the app.
 
 For how to build, test and deploy the app, and the full list of components and their licences, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).

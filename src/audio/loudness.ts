@@ -34,27 +34,36 @@ function kWeighting(rate: number): [Biquad, Biquad] {
   return [shelf, highpass];
 }
 
-/** Integrated loudness in LUFS, or -Infinity for silence. */
-export function measureLufs(pcm: Float32Array, rate: number): number {
+/**
+ * Integrated loudness in LUFS, or -Infinity for silence. The audio may be given in pieces (the
+ * sentences of one voice); they are measured as one continuous signal without being copied
+ * together, which matters for recordings of an hour or more.
+ */
+export function measureLufs(audio: Float32Array | Float32Array[], rate: number): number {
+  const pieces = Array.isArray(audio) ? audio : [audio];
   const [s1, s2] = kWeighting(rate);
-  const block = Math.round(0.4 * rate);
   const hop = Math.round(0.1 * rate);
-  if (pcm.length < block) return -Infinity;
+  if (pieces.reduce((n, p) => n + p.length, 0) < hop * 4) return -Infinity;
 
   // Mean square of the filtered signal per 100 ms hop; a 400 ms block is four consecutive hops.
-  const hops = new Float64Array(Math.floor(pcm.length / hop));
+  const hops: number[] = [];
   let x1 = 0, x2 = 0, y1 = 0, y2 = 0, u1 = 0, u2 = 0, v1 = 0, v2 = 0;
-  for (let h = 0; h < hops.length; h++) {
-    let sum = 0;
-    for (let i = h * hop, end = i + hop; i < end; i++) {
+  let sum = 0;
+  let filled = 0;
+  for (const pcm of pieces) {
+    for (let i = 0; i < pcm.length; i++) {
       const x = pcm[i];
       const y = s1.b0 * x + s1.b1 * x1 + s1.b2 * x2 - s1.a1 * y1 - s1.a2 * y2;
       x2 = x1; x1 = x; y2 = y1; y1 = y;
       const v = s2.b0 * y + s2.b1 * u1 + s2.b2 * u2 - s2.a1 * v1 - s2.a2 * v2;
       u2 = u1; u1 = y; v2 = v1; v1 = v;
       sum += v * v;
+      if (++filled === hop) {
+        hops.push(sum / hop);
+        sum = 0;
+        filled = 0;
+      }
     }
-    hops[h] = sum / hop;
   }
   const blocks: number[] = [];
   for (let h = 0; h + 4 <= hops.length; h++) blocks.push((hops[h] + hops[h + 1] + hops[h + 2] + hops[h + 3]) / 4);

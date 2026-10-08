@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { defineConfig, type Plugin } from 'vite';
 
 // Cross-origin isolation lets the WASM engines use several threads.
@@ -22,6 +22,14 @@ function serviceWorker(): Plugin {
         .replace('__PRECACHE_FILES__', JSON.stringify(files));
       this.emitFile({ type: 'asset', fileName: 'sw.js', source });
     },
+    closeBundle() {
+      // The bundler copies onnxruntime's 21 MB WebGPU runtime because Kokoro's library mentions it,
+      // but Kokoro fetches its own runtime from a CDN and never asks for this copy. Leaving it out
+      // makes the published site about a third smaller.
+      const assets = new URL('./dist/assets/', import.meta.url);
+      if (!existsSync(assets)) return;
+      for (const file of readdirSync(assets)) if (file.includes('.jsep')) rmSync(new URL(file, assets));
+    },
   };
 }
 
@@ -31,8 +39,12 @@ const output = {
   assetFileNames: (asset: { names?: string[] }) => (asset.names?.[0]?.endsWith('.mjs') ? 'assets/[name]-[hash].js' : 'assets/[name]-[hash][extname]'),
 };
 
+const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
+
 export default defineConfig({
   base: './',
+  // Shown in the footer of the app.
+  define: { __APP_VERSION__: JSON.stringify(version), __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)) },
   build: { rollupOptions: { output } },
   worker: { format: 'es', rollupOptions: { output } },
   server: { headers: isolation },

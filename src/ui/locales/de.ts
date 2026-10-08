@@ -81,7 +81,7 @@ export const de: Record<MessageKey, string> = {
   'engine.note': 'Piper deckt alle Sprachen ab und ist schnell. Kokoro klingt natürlicher, spricht aber nur Englisch, ist deutlich langsamer und lädt beim ersten Einsatz ein größeres Modell (etwa 90 bis 330 MB).',
   'hw.summary': 'Hardware, Software und erwartete Rechenzeiten',
   'hw.need': 'Was du brauchst',
-  'hw.browser': '<strong>Browser:</strong> Empfohlen wird ein aktuelles Chrome, Edge oder Brave; nur dort wurde die App getestet. Firefox und Safari sind noch nicht getestet.',
+  'hw.browser': '<strong>Browser:</strong> ein aktuelles Chrome, Edge, Brave oder Firefox; in allen vieren wurde die App getestet und läuft gut. Safari ist noch nicht getestet.',
   'hw.memory': '<strong>Arbeitsspeicher:</strong> 4 GB genügen für Piper und kurze Transkripte. Empfohlen sind 8 GB. Für Kokoro oder Aufnahmen über eine Stunde sollten es 16 GB sein.',
   'hw.disk': '<strong>Festplatte:</strong> Jede Piper-Stimme belegt 20 bis 110 MB, Kokoro 90 bis 330 MB; beides wird einmal heruntergeladen. Erzeugtes Audio wird außerdem für schnelles erneutes Erzeugen aufbewahrt, etwa 3 MB pro Minute, bis du es löschst.',
   'hw.internet': '<strong>Internet:</strong> nur für den ersten Download der Stimmen. Dein Transkript wird nie hochgeladen.',
@@ -185,6 +185,9 @@ export const de: Record<MessageKey, string> = {
   'cache.clear': 'Audio-Cache leeren',
   'cache.clear.title': 'Erzeugte Sätze bleiben in diesem Browser gespeichert, damit ein erneutes Erzeugen schnell geht. Das hier löscht sie.',
   'cache.cleared': 'Der Cache der erzeugten Sätze wurde geleert.',
+  'cache.size': '{size} MB belegt',
+  'cache.empty': 'leer',
+  'cache.size.title': 'So viel Platz belegen die erzeugten Sätze in diesem Browser.',
   'render.downloading': 'Stimmenmodell von {engine} wird geladen: {percent} %',
   'render.progress': 'Satz {done} von {total} wird erzeugt…',
   'render.progress.seconds': 'Satz {done} von {total} wird erzeugt, noch etwa {n} s…',
@@ -253,6 +256,14 @@ export const de: Record<MessageKey, string> = {
 
   'chapters.cue': "Kapitel speichern (.cue)",
   'chapters.cue.title': "Eine kleine Datei mit der Kapitelliste, für Player, die die Kapitel in einer MP3 nicht anzeigen (zum Beispiel VLC). Lege sie in denselben Ordner wie die MP3 und öffne sie statt der MP3.",
+
+  'version.info': "SynthPod {version}, erstellt am {date}.",
+  'update.check': "Nach Updates suchen",
+  'update.checking': "Wird geprüft…",
+  'update.current': "Du hast die neueste Version.",
+  'update.reloading': "Eine neuere Version wurde gefunden. Wird neu geladen…",
+  'update.failed': "Die Suche nach Updates ist fehlgeschlagen. Dafür braucht es eine Internetverbindung und die installierte oder veröffentlichte App.",
+  'footer.legal': "© 2026 Jesus J. Ballesteros. SynthPod ist freie Software unter der <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/LICENSE\">MIT-Lizenz</a> und wird ohne jede Gewährleistung bereitgestellt. <a href=\"https://github.com/JesusJBallesteros/synthpod\">Quellcode</a>. Die Sprach-Engines, Stimmen und Übersetzungsmodelle, die die App herunterlädt, stammen von Dritten und haben <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/docs/DEVELOPMENT.md#components-and-licences\">eigene Lizenzen</a>; jede Piper-Stimme hat ihre eigene. Du bist dafür verantwortlich, die Texte verwenden zu dürfen, die du umwandelst, und für die Nutzung des erzeugten Audios.",
 
   'offline.ready': 'Bereit für die Nutzung ohne Internet. Bereits verwendete Stimmen stehen offline zur Verfügung.',
   'offline.saving': 'Die App wird für die Offline-Nutzung gespeichert…',
