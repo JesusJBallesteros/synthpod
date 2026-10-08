@@ -263,7 +263,7 @@ export const en = {
   'update.current': "You have the latest version.",
   'update.reloading': "A newer version was found. Reloading…",
   'update.failed': "Could not check for updates. This needs an internet connection and the installed or published app.",
-  'footer.legal': "© 2026 Jesus J. Ballesteros. SynthPod is free software under the <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/LICENSE\">MIT licence</a> and is provided as it is, without warranty of any kind. <a href=\"https://github.com/JesusJBallesteros/synthpod\">Source code</a>. The speech engines, voices and translation models it downloads are the work of others and have <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/docs/DEVELOPMENT.md#components-and-licences\">their own licences</a>; Piper voices are licensed one by one. You are responsible for having the right to use the texts you convert, and for how you use the audio.",
+  'footer.legal': "© 2026 Jesus J. Ballesteros. SynthPod is free software under the <a href=\"https://github.com/JesusJBallesteros/synthpod/blob/main/LICENSE\">MIT licence</a> and is provided as it is, without warranty of any kind. <a href=\"https://github.com/JesusJBallesteros/synthpod\">Source code</a>. The speech engines, voices and translation models it downloads are the work of others and have <a href=\"https://github.com/JesusJBallesteros/synthpod#licence-and-credits\">their own licences</a>; Piper voices are licensed one by one. You are responsible for having the right to use the texts you convert, and for how you use the audio.",
 
   'offline.ready': 'Ready to work offline. Voices you have already used are available without internet.',
   'offline.saving': 'Saving the app for offline use…',

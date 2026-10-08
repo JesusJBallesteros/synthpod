@@ -15,3 +15,6 @@ Thumbs.db
 .claude/
 *.cue
 
+
+# Developer notes, kept locally only
+docs/DEVELOPMENT.md
