@@ -265,6 +265,7 @@ If you change one speaker's voice and render again, only that speaker is rendere
 |---|---|
 | **Save MP3…** | Stores the finished file on your computer. |
 | **Save captions (.srt)** / **(.vtt)** | Stores the text with its exact timings. `.srt` is the most widely supported subtitle format; `.vtt` is for web video players. |
+| **Save chapters (.cue)** | Stores a small "cue sheet" that lists the chapters. Use it with players that do not show the chapters inside an MP3, such as VLC: save the MP3 first, keep the `.cue` file in the same folder under the same name, and open the `.cue` file instead of the MP3. The player then shows the chapters as a list. |
 | **Clear render cache** | Deletes the audio kept for fast re-rendering, to free disk space. |
 | The player | Listen to the result in the page before saving. |
 
@@ -307,7 +308,7 @@ Other browsers, as far as can be told without testing:
 - **"Starting the speech engine…" stays for a long time.** In some browsers the engine's extra processor threads fail to start. After 40 seconds the app notices, continues on a single thread and remembers that for next time. Rendering then works, but several times slower; the hardware panel in step 4 says when this has happened.
 - **A preview or render seems stuck for another reason.** If the speech engine stops answering, the app says so after a couple of minutes and restarts it; press the button again. If it keeps happening, close other heavy tabs: translation and Kokoro both use a lot of memory.
 - **"Downloading … voice model" appears in the middle of a render.** That is normal: each voice is loaded the first time one of its sentences comes up.
-- **No chapters show in my player.** Files rendered before chapter markers existed do not have them; render again. If they still do not show, your player may not read chapters from MP3 files.
+- **No chapters show in my player.** The chapters are inside the MP3, but several common players, VLC and Windows Media Player among them, do not display chapters from MP3 files. Press **Save chapters (.cue)** in step 7 and open that file in the player instead, or listen in a podcast app, which does show them. If you rename or move the MP3, the `.cue` file must be renamed and moved with it.
 
 ## Privacy
 

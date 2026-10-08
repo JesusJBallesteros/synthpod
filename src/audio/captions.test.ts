@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { rebuildTurns, route, targetsFor, toTranscript } from '../translate/pairs';
-import { chapterFrames, insertFrames, toChapters, toSrt, toVtt, type Cue } from './captions';
+import { chapterFrames, insertFrames, toChapters, toCueSheet, toSrt, toVtt, type Cue } from './captions';
 
 const cues: Cue[] = [
   { start: 0, end: 1.5, turn: 0, speaker: null, text: 'A teaser.' },
@@ -77,6 +77,32 @@ describe('chapters', () => {
     expect(size).toBe(20 + frames.length);
     expect([...out.subarray(10 + size, 10 + size + 2)]).toEqual([0xff, 0xfb]);
     expect(insertFrames(new Uint8Array([1, 2, 3]).buffer, frames).byteLength).toBe(3); // no tag: untouched
+  });
+});
+
+describe('cue sheet', () => {
+  it('lists the chapters with their positions in minutes, seconds and frames', () => {
+    const sheet = toCueSheet(
+      [
+        { title: 'Introducción', startMs: 0, endMs: 101733 },
+        { title: 'She said "no"', startMs: 101733, endMs: 3605500 },
+        { title: 'The end', startMs: 3605500, endMs: 3700000 },
+      ],
+      { file: 'My paper.mp3', title: 'My paper', performer: '' },
+    );
+    expect(sheet).toBe(
+      '\uFEFFTITLE "My paper"\r\nFILE "My paper.mp3" MP3\r\n' +
+        '  TRACK 01 AUDIO\r\n    TITLE "Introducción"\r\n    INDEX 01 00:00:00\r\n' +
+        "  TRACK 02 AUDIO\r\n    TITLE \"She said 'no'\"\r\n    INDEX 01 01:41:55\r\n" +
+        '  TRACK 03 AUDIO\r\n    TITLE "The end"\r\n    INDEX 01 60:05:38\r\n',
+    );
+  });
+
+  it('never lists more than 99 tracks', () => {
+    const many = Array.from({ length: 250 }, (_, i) => ({ title: `Part ${i}`, startMs: i * 1000, endMs: (i + 1) * 1000 }));
+    const sheet = toCueSheet(many, { file: 'a.mp3', title: 'a', performer: 'Someone' });
+    expect(sheet.match(/TRACK \d+ AUDIO/g)!.length).toBeLessThanOrEqual(99);
+    expect(sheet).toContain('PERFORMER "Someone"');
   });
 });
 

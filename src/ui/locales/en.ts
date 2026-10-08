@@ -251,6 +251,9 @@ export const en = {
   'format.none': "No speakers: one voice reads everything",
   'speaker.reader': "Reader",
 
+  'chapters.cue': "Save chapters (.cue)",
+  'chapters.cue.title': "A small file listing the chapters, for players that do not show the chapters inside an MP3 (VLC, for example). Keep it in the same folder as the MP3 and open it instead of the MP3.",
+
   'offline.ready': 'Ready to work offline. Voices you have already used are available without internet.',
   'offline.saving': 'Saving the app for offline use…',
 };

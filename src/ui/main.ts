@@ -1,5 +1,5 @@
 import { clearChunks } from '../audio/cache';
-import { toChapters, toSrt, toVtt, type Cue } from '../audio/captions';
+import { toChapters, toCueSheet, toSrt, toVtt, type Cue } from '../audio/captions';
 import { encodeMp3, saveBlob, type FileKind } from '../audio/mp3';
 import { renderTurns, sentences, synthCached, type Cast } from '../audio/render';
 import { onThreadFallback, usesSingleThread, WorkerEngine } from '../engines/client';
@@ -62,6 +62,7 @@ const offlineStatus = $('offlineStatus');
 const reviewEl = $('review');
 const saveSrt = $<HTMLButtonElement>('saveSrt');
 const saveVtt = $<HTMLButtonElement>('saveVtt');
+const saveCue = $<HTMLButtonElement>('saveCue');
 const translateFrom = $('translateFrom');
 const translateTo = $<HTMLSelectElement>('translateTo');
 const translateStart = $<HTMLButtonElement>('translateStart');
@@ -96,6 +97,8 @@ let offlineReady: boolean | null = null;
 let abort: AbortController | null = null;
 let mp3: Blob | null = null;
 let cues: Cue[] = [];
+// The name the MP3 was last saved under; the cue sheet has to point at exactly that file.
+let savedMp3Name: string | null = null;
 let translating: AbortController | null = null;
 // The transcript as it was before a translation replaced it.
 let original: string | null = null;
@@ -526,6 +529,8 @@ async function render(): Promise<void> {
   saveBtn.hidden = true;
   saveSrt.hidden = true;
   saveVtt.hidden = true;
+  saveCue.hidden = true;
+  savedMp3Name = null;
   player.hidden = true;
   progress.hidden = false;
   progress.value = 0;
@@ -603,6 +608,7 @@ async function render(): Promise<void> {
     saveBtn.hidden = false;
     saveSrt.hidden = false;
     saveVtt.hidden = false;
+    saveCue.hidden = false;
   } catch (err) {
     status.textContent = signal.aborted ? t('render.cancelled') : t('render.failed', { error: (err as Error).message });
   } finally {
@@ -859,7 +865,19 @@ cancelBtn.addEventListener('click', () => abort?.abort());
 function fileBaseName(): string {
   return (tagTitle.value.trim() || title).replace(/[\\/:*?"<>|]+/g, ' ').trim() || 'transcript';
 }
-saveBtn.addEventListener('click', () => mp3 && saveBlob(mp3, `${fileBaseName()}.mp3`));
+saveBtn.addEventListener('click', async () => {
+  if (!mp3) return;
+  savedMp3Name = (await saveBlob(mp3, `${fileBaseName()}.mp3`)) ?? savedMp3Name;
+});
+saveCue.addEventListener('click', () => {
+  const file = savedMp3Name ?? `${fileBaseName()}.mp3`;
+  const sheet = toCueSheet(toChapters(cues), {
+    file,
+    title: tagTitle.value.trim() || title,
+    performer: settings.artist.trim() || stats.map((s) => s.name).join(', '),
+  });
+  void saveBlob(new Blob([sheet], { type: 'text/plain' }), file.replace(/\.mp3$/i, '') + '.cue', { description: 'Cue sheet', mime: 'text/plain', extension: '.cue' });
+});
 clearBtn.addEventListener('click', async () => {
   await clearChunks();
   status.textContent = t('cache.cleared');

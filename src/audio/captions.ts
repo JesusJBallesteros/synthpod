@@ -130,3 +130,27 @@ export function insertFrames(file: ArrayBuffer, frames: Uint8Array): ArrayBuffer
   out.set([(grown >> 21) & 0x7f, (grown >> 14) & 0x7f, (grown >> 7) & 0x7f, grown & 0x7f], 6);
   return out.buffer as ArrayBuffer;
 }
+
+/**
+ * A cue sheet: a small text file that lists the chapters of an audio file kept beside it.
+ * Players that ignore the chapters inside an MP3 (VLC, for one) read this instead.
+ */
+export function toCueSheet(chapters: Chapter[], info: { file: string; title: string; performer: string }): string {
+  // Quotes delimit the fields and cannot be escaped, so they are replaced.
+  const quoted = (text: string) => `"${text.replace(/"/g, "'").replace(/\s+/g, ' ').trim()}"`;
+  // A cue sheet holds at most 99 tracks; longer lists keep every n-th chapter.
+  const step = Math.ceil(chapters.length / 99);
+  const tracks = chapters.filter((_, i) => i % step === 0);
+  const lines = [];
+  if (info.performer) lines.push(`PERFORMER ${quoted(info.performer)}`);
+  lines.push(`TITLE ${quoted(info.title)}`, `FILE ${quoted(info.file)} MP3`);
+  tracks.forEach((chapter, i) => {
+    // Positions are minutes:seconds:frames, with 75 frames to the second.
+    const frames = Math.round((chapter.startMs / 1000) * 75);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const index = `${pad(Math.floor(frames / 4500))}:${pad(Math.floor(frames / 75) % 60)}:${pad(frames % 75)}`;
+    lines.push(`  TRACK ${pad(i + 1)} AUDIO`, `    TITLE ${quoted(chapter.title)}`, `    INDEX 01 ${index}`);
+  });
+  // The byte-order mark tells players the file is UTF-8, so accented titles come out right.
+  return `\uFEFF${lines.join('\r\n')}\r\n`;
+}

@@ -251,6 +251,9 @@ export const de: Record<MessageKey, string> = {
   'format.none': "Keine Sprecher: eine Stimme liest alles",
   'speaker.reader': "Vorleser",
 
+  'chapters.cue': "Kapitel speichern (.cue)",
+  'chapters.cue.title': "Eine kleine Datei mit der Kapitelliste, für Player, die die Kapitel in einer MP3 nicht anzeigen (zum Beispiel VLC). Lege sie in denselben Ordner wie die MP3 und öffne sie statt der MP3.",
+
   'offline.ready': 'Bereit für die Nutzung ohne Internet. Bereits verwendete Stimmen stehen offline zur Verfügung.',
   'offline.saving': 'Die App wird für die Offline-Nutzung gespeichert…',
 };

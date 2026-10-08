@@ -34,7 +34,8 @@ export interface FileKind {
 
 export const MP3_FILE: FileKind = { description: 'MP3 audio', mime: 'audio/mpeg', extension: '.mp3' };
 
-export async function saveBlob(blob: Blob, suggestedName: string, kind: FileKind = MP3_FILE): Promise<void> {
+/** Save a file; resolves to the name it was saved under, or null if the user cancelled. */
+export async function saveBlob(blob: Blob, suggestedName: string, kind: FileKind = MP3_FILE): Promise<string | null> {
   const picker = (window as any).showSaveFilePicker;
   if (picker) {
     try {
@@ -45,9 +46,9 @@ export async function saveBlob(blob: Blob, suggestedName: string, kind: FileKind
       const w = await handle.createWritable();
       await w.write(blob);
       await w.close();
-      return;
+      return handle.name as string;
     } catch (err) {
-      if ((err as DOMException).name === 'AbortError') return;
+      if ((err as DOMException).name === 'AbortError') return null;
       // fall through to the download link
     }
   }
@@ -57,4 +58,5 @@ export async function saveBlob(blob: Blob, suggestedName: string, kind: FileKind
   a.download = suggestedName;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  return suggestedName;
 }

@@ -251,6 +251,9 @@ export const es: Record<MessageKey, string> = {
   'format.none': "Sin hablantes: una sola voz lo lee todo",
   'speaker.reader': "Lector",
 
+  'chapters.cue': "Guardar capítulos (.cue)",
+  'chapters.cue.title': "Un archivo pequeño con la lista de capítulos, para reproductores que no muestran los capítulos incluidos en un MP3 (VLC, por ejemplo). Guárdalo en la misma carpeta que el MP3 y ábrelo en lugar del MP3.",
+
   'offline.ready': 'Lista para funcionar sin conexión. Las voces que ya has usado están disponibles sin internet.',
   'offline.saving': 'Guardando la aplicación para usarla sin conexión…',
 };
